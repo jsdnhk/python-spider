@@ -38,12 +38,12 @@ class BiliBili:
 
 	def video_downloader(self, video_url, video_name):
 		"""
-		视频下载
+		視頻下載
 		Parameters:
-			video_url: 带水印的视频地址
-			video_name: 视频名
+			video_url: 帶水印的視頻地址
+			video_name: 視頻名
 		Returns:
-			无
+			無
 		"""
 		size = 0
 		with closing(self.sess.get(video_url, headers=self.dn_headers, stream=True, verify=False)) as response:
@@ -58,21 +58,21 @@ class BiliBili:
 						size += len(data)
 						file.flush()
 
-						sys.stdout.write('  [下载进度]:%.2f%%' % float(size / content_size * 100) + '\r')
+						sys.stdout.write('  [下載進度]:%.2f%%' % float(size / content_size * 100) + '\r')
 						# sys.stdout.flush()
 						if size / content_size == 1:
 							print('\n')
 			else:
-				print('链接异常')
+				print('鏈接異常')
 
 	def search_video(self, search_url):
 		"""
 		搜索接口
 		Parameters:
-			search_url: 带水印的视频地址
+			search_url: 帶水印的視頻地址
 		Returns:
-			titles：视频名列表
-			arcurls: 视频播放地址列表
+			titles：視頻名列表
+			arcurls: 視頻播放地址列表
 		"""
 		req = self.sess.get(url=search_url, headers=self.search_headers, verify=False)
 		html = json.loads(req.text)
@@ -86,12 +86,12 @@ class BiliBili:
 
 	def get_download_url(self, arcurl):
 		"""
-		获取视频下载地址
+		獲取視頻下載地址
 		Parameters:
-			arcurl: 视频播放地址
-			oid：弹幕地址参数
+			arcurl: 視頻播放地址
+			oid：彈幕地址參數
 		Returns:
-			download_url：视频下载地址
+			download_url：視頻下載地址
 		"""
 		req = self.sess.get(url=arcurl, headers=self.video_headers, verify=False)
 		pattern = '.__playinfo__=(.*)</script><script>window.__INITIAL_STATE__='
@@ -117,12 +117,12 @@ class BiliBili:
 
 	def download_xml(self, danmu_url, danmu_name):
 		"""
-		获取视频XML原生弹幕
+		獲取視頻XML原生彈幕
 		Parameters:
-			danmu_url: 弹幕地址
-			danmu_name：弹幕xml文件保存名
+			danmu_url: 彈幕地址
+			danmu_name：彈幕xml文件保存名
 		Returns:
-			无
+			無
 		"""
 		with closing(self.sess.get(danmu_url, headers=self.danmu_header, stream=True, verify=False)) as response:  
 			if response.status_code == 200:
@@ -131,16 +131,16 @@ class BiliBili:
 						file.write(data)
 						file.flush()
 			else:
-				print('链接异常')
+				print('鏈接異常')
 
 	def get_danmu(self, oid, filename):
 		"""
-		下载弹幕
+		下載彈幕
 		Parameters:
-			oid: 弹幕oid
-			filename: 弹幕保存前缀名
+			oid: 彈幕oid
+			filename: 彈幕保存前綴名
 		Returns:
-			无
+			無
 		"""
 		danmu_url = 'https://api.bilibili.com/x/v1/dm/list.so?oid={}'.format(oid)
 		danmu_name = os.path.join(self.dir, filename + '.xml')
@@ -152,12 +152,12 @@ class BiliBili:
 
 	def search_videos(self, keyword, pages):
 		"""
-		搜索视频
+		搜索視頻
 		Parameters:
-			keyword: 搜索关键字
-			pages：下载页数
+			keyword: 搜索關鍵字
+			pages：下載頁數
 		Returns:
-			无
+			無
 		"""
 		if self.dir not in os.listdir():
 			os.mkdir(self.dir)
@@ -175,9 +175,9 @@ class BiliBili:
 						if download_url[i] != '' and oid != '':
 							fname = title + '_' + str(i+1) + '.flv'
 							movies.append(fname)
-							print('第[ %d ]页:视频[ %s ]下载中:' % (page, fname))
+							print('第[ %d ]頁:視頻[ %s ]下載中:' % (page, fname))
 							self.video_downloader(download_url[i], fname)
-							print('视频下载完成!')
+							print('視頻下載完成!')
 					if len(movies) > 1:
 						filelist_fname = os.path.join(self.dir, 'filelist.txt')
 						with open(filelist_fname, 'w') as f:
@@ -187,13 +187,13 @@ class BiliBili:
 						try:
 							os.system('cd %s & ffmpeg -f concat -safe 0 -i %s -c copy %s' % (self.dir, 'filelist.txt', title + '.flv'))
 						except:
-							print('请安装FFmpeg,并配置环境变量 http://ffmpeg.org/')
+							print('請安裝FFmpeg,並配置環境變量 http://ffmpeg.org/')
 						os.remove(filelist_fname)
 						for movie in movies:
 							os.remove(os.path.join(self.dir, movie))
-						print('视频合并完成！')
+						print('視頻合併完成！')
 					self.get_danmu(oid, title)
-					print('弹幕下载完成!')
+					print('彈幕下載完成!')
 
 if __name__ == '__main__':
 	if len(sys.argv) == 1:
@@ -208,4 +208,4 @@ if __name__ == '__main__':
 	B = BiliBili(args.dir,args.keyword)
 	B.search_videos(args.keyword, args.pages)
 
-	print('全部下载完成!')
+	print('全部下載完成!')

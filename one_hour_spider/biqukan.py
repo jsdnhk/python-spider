@@ -3,11 +3,11 @@ from bs4 import BeautifulSoup
 import requests, sys
 
 """
-类说明:下载《笔趣看》网小说《一念永恒》
+類說明:下載《筆趣看》網小說《一念永恆》
 Parameters:
-	无
+	無
 Returns:
-	无
+	無
 Modify:
 	2017-09-13
 """
@@ -16,16 +16,16 @@ class downloader(object):
 	def __init__(self):
 		self.server = 'http://www.biqukan.com/'
 		self.target = 'http://www.biqukan.com/1_1094/'
-		self.names = []			#存放章节名
-		self.urls = []			#存放章节链接
-		self.nums = 0			#章节数
+		self.names = []			#存放章節名
+		self.urls = []			#存放章節鏈接
+		self.nums = 0			#章節數
 
 	"""
-	函数说明:获取下载链接
+	函數說明:獲取下載鏈接
 	Parameters:
-		无
+		無
 	Returns:
-		无
+		無
 	Modify:
 		2017-09-13
 	"""
@@ -36,17 +36,17 @@ class downloader(object):
 	    div = div_bf.find_all('div', class_ = 'listmain')
 	    a_bf = BeautifulSoup(str(div[0]))
 	    a = a_bf.find_all('a')
-	    self.nums = len(a[15:])								#剔除不必要的章节，并统计章节数
+	    self.nums = len(a[15:])								#剔除不必要的章節，並統計章節數
 	    for each in a[15:]:
 	    	self.names.append(each.string)
 	    	self.urls.append(self.server + each.get('href'))
 
 	"""
-	函数说明:获取章节内容
+	函數說明:獲取章節內容
 	Parameters:
-		target - 下载连接(string)
+		target - 下載連接(string)
 	Returns:
-		texts - 章节内容(string)
+		texts - 章節內容(string)
 	Modify:
 		2017-09-13
 	"""
@@ -59,13 +59,13 @@ class downloader(object):
 		return texts
 
 	"""
-	函数说明:将爬取的文章内容写入文件
+	函數說明:將爬取的文章內容寫入文件
 	Parameters:
-		name - 章节名称(string)
-		path - 当前路径下,小说保存名称(string)
-		text - 章节内容(string)
+		name - 章節名稱(string)
+		path - 當前路徑下,小說保存名稱(string)
+		text - 章節內容(string)
 	Returns:
-		无
+		無
 	Modify:
 		2017-09-13
 	"""
@@ -79,9 +79,9 @@ class downloader(object):
 if __name__ == "__main__":
 	dl = downloader()
 	dl.get_download_url()
-	print('《一年永恒》开始下载：')
+	print('《一年永恆》開始下載：')
 	for i in range(dl.nums):
-		dl.writer(dl.names[i], '一念永恒.txt', dl.get_contents(dl.urls[i]))
-		sys.stdout.write("  已下载:%.3f%%" %  float(i/dl.nums*100) + '\r')
+		dl.writer(dl.names[i], '一念永恆.txt', dl.get_contents(dl.urls[i]))
+		sys.stdout.write("  已下載:%.3f%%" %  float(i/dl.nums*100) + '\r')
 		sys.stdout.flush()
-	print('《一年永恒》下载完成')
+	print('《一年永恆》下載完成')

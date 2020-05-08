@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from multiprocessing.dummy import Pool as ThreadPool
 
-search_keyword = '越狱第一季'
+search_keyword = '越獄第一季'
 search_url = 'http://www.jisudhw.com/index.php'
 serach_params = {
     'm': 'vod-search'
@@ -57,7 +57,7 @@ def downVideo(url):
     name = os.path.join(video_dir, '第%03d集.mp4' % num)
     ffmpy3.FFmpeg(inputs={url: None}, outputs={name:None}).run()
             
-# 开8个线程池
+# 開8個線程池
 pool = ThreadPool(8)
 results = pool.map(downVideo, serach_res.keys())
 pool.close()

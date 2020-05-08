@@ -24,13 +24,13 @@ if __name__ == '__main__':
 		for each in targets_url:
 			list_url.append(each.img.get('alt') + '=' + each.get('href'))
 
-	print('连接采集完成')
+	print('連接採集完成')
 
 	for each_img in list_url:
 		img_info = each_img.split('=')
 		target_url = img_info[1]
 		filename = img_info[0] + '.jpg'
-		print('下载：' + filename)
+		print('下載：' + filename)
 		headers = {
 			"User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 		}
@@ -46,4 +46,4 @@ if __name__ == '__main__':
 		urlretrieve(url = img_url,filename = 'images/' + filename)
 		time.sleep(1)
 
-	print('下载完成！')
+	print('下載完成！')

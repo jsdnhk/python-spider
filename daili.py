@@ -8,16 +8,16 @@ import random
 import re
 
 """
-函数说明:获取IP代理
+函數說明:獲取IP代理
 Parameters:
-	page - 高匿代理页数,默认获取第一页
+	page - 高匿代理頁數,默認獲取第一頁
 Returns:
 	proxys_list - 代理列表
 Modify:
 	2017-05-27
 """
 def get_proxys(page = 1):
-	#requests的Session可以自动保持cookie,不需要自己维护cookie内容
+	#requests的Session可以自動保持cookie,不需要自己維護cookie內容
 	S = requests.Session()
 	#西祠代理高匿IP地址
 	target_url = 'http://www.xicidaili.com/nn/%d' % page
@@ -29,19 +29,19 @@ def get_proxys(page = 1):
 		'Accept-Encoding':'gzip, deflate, sdch',
 		'Accept-Language':'zh-CN,zh;q=0.8',
 	}
-	#get请求
+	#get請求
 	target_response = S.get(url = target_url, headers = target_headers)
-	#utf-8编码
+	#utf-8編碼
 	target_response.encoding = 'utf-8'
-	#获取网页信息
+	#獲取網頁信息
 	target_html = target_response.text
-	#获取id为ip_list的table
+	#獲取id爲ip_list的table
 	bf1_ip_list = BeautifulSoup(target_html, 'lxml')
 	bf2_ip_list = BeautifulSoup(str(bf1_ip_list.find_all(id = 'ip_list')), 'lxml')
 	ip_list_info = bf2_ip_list.table.contents
-	#存储代理的列表
+	#存儲代理的列表
 	proxys_list = []
-	#爬取每个代理信息
+	#爬取每個代理信息
 	for index in range(len(ip_list_info)):
 		if index % 2 == 1 and index != 1:
 			dom = etree.HTML(str(ip_list_info[index]))
@@ -53,87 +53,87 @@ def get_proxys(page = 1):
 	return proxys_list
 
 """
-函数说明:检查代理IP的连通性
+函數說明:檢查代理IP的連通性
 Parameters:
 	ip - 代理的ip地址
-	lose_time - 匹配丢包数
-	waste_time - 匹配平均时间
+	lose_time - 匹配丟包數
+	waste_time - 匹配平均時間
 Returns:
-	average_time - 代理ip平均耗时
+	average_time - 代理ip平均耗時
 Modify:
 	2017-05-27
 """
 def check_ip(ip, lose_time, waste_time):
-	#命令 -n 要发送的回显请求数 -w 等待每次回复的超时时间(毫秒)
+	#命令 -n 要發送的回顯請求數 -w 等待每次回覆的超時時間(毫秒)
 	cmd = "ping -n 3 -w 3 %s"
-	#执行命令
+	#執行命令
 	p = sp.Popen(cmd % ip, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, shell=True) 
-	#获得返回结果并解码
+	#獲得返回結果並解碼
 	out = p.stdout.read().decode("gbk")
-	#丢包数
+	#丟包數
 	lose_time = lose_time.findall(out)
-	#当匹配到丢失包信息失败,默认为三次请求全部丢包,丢包数lose赋值为3
+	#當匹配到丟失包信息失敗,默認爲三次請求全部丟包,丟包數lose賦值爲3
 	if len(lose_time) == 0:
 		lose = 3
 	else:
 		lose = int(lose_time[0])
-	#如果丢包数目大于2个,则认为连接超时,返回平均耗时1000ms
+	#如果丟包數目大於2個,則認爲連接超時,返回平均耗時1000ms
 	if lose > 2:
 		#返回False
 		return 1000
-	#如果丢包数目小于等于2个,获取平均耗时的时间
+	#如果丟包數目小於等於2個,獲取平均耗時的時間
 	else:
-		#平均时间
+		#平均時間
 		average = waste_time.findall(out)
-		#当匹配耗时时间信息失败,默认三次请求严重超时,返回平均好使1000ms
+		#當匹配耗時時間信息失敗,默認三次請求嚴重超時,返回平均好使1000ms
 		if len(average) == 0:
 			return 1000
 		else:
 			#
 			average_time = int(average[0])
-			#返回平均耗时
+			#返回平均耗時
 			return average_time
 
 """
-函数说明:初始化正则表达式
+函數說明:初始化正則表達式
 Parameters:
-	无
+	無
 Returns:
-	lose_time - 匹配丢包数
-	waste_time - 匹配平均时间
+	lose_time - 匹配丟包數
+	waste_time - 匹配平均時間
 Modify:
 	2017-05-27
 """
 def initpattern():
-	#匹配丢包数
-	lose_time = re.compile(u"丢失 = (\d+)", re.IGNORECASE)
-	#匹配平均时间
+	#匹配丟包數
+	lose_time = re.compile(u"丟失 = (\d+)", re.IGNORECASE)
+	#匹配平均時間
 	waste_time = re.compile(u"平均 = (\d+)ms", re.IGNORECASE)
 	return lose_time, waste_time
 
 if __name__ == '__main__':
-	#初始化正则表达式
+	#初始化正則表達式
 	lose_time, waste_time = initpattern()
-	#获取IP代理
+	#獲取IP代理
 	proxys_list = get_proxys(1)
 
-	#如果平均时间超过200ms重新选取ip
+	#如果平均時間超過200ms重新選取ip
 	while True:
-		#从100个IP中随机选取一个IP作为代理进行访问
+		#從100個IP中隨機選取一個IP作爲代理進行訪問
 		proxy = random.choice(proxys_list)
 		split_proxy = proxy.split('#')
-		#获取IP
+		#獲取IP
 		ip = split_proxy[1]
-		#检查ip
+		#檢查ip
 		average_time = check_ip(ip, lose_time, waste_time)
 		if average_time > 200:
 			#去掉不能使用的IP
 			proxys_list.remove(proxy)
-			print("ip连接超时, 重新获取中!")
+			print("ip連接超時, 重新獲取中!")
 		if average_time < 200:
 			break
 
-	#去掉已经使用的IP
+	#去掉已經使用的IP
 	proxys_list.remove(proxy)
 	proxy_dict = {split_proxy[0]:split_proxy[1] + ':' + split_proxy[2]}
 	print("使用代理:", proxy_dict)

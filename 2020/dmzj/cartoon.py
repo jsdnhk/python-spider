@@ -13,14 +13,14 @@ import time
         https://mp.weixin.qq.com/s/OCWwRVDFNslIuKyiCVUoTA
 """
 
-# 创建保存目录
-save_dir = '妖神记'
+# 創建保存目錄
+save_dir = '妖神記'
 if save_dir not in os.listdir('./'):
     os.mkdir(save_dir)
     
 target_url = "https://www.dmzj.com/info/yaoshenji.html"
 
-# 获取动漫章节链接和章节名
+# 獲取動漫章節鏈接和章節名
 r = requests.get(url = target_url)
 bs = BeautifulSoup(r.text, 'lxml')
 list_con_li = bs.find('ul', class_="list_con_li")
@@ -33,7 +33,7 @@ for cartoon in cartoon_list:
     chapter_names.insert(0, name)
     chapter_urls.insert(0, href)
 
-# 下载漫画 
+# 下載漫畫 
 for i, url in enumerate(tqdm(chapter_urls)):
     download_header = {
         'Referer': url
@@ -70,5 +70,5 @@ for i, url in enumerate(tqdm(chapter_urls)):
                     for data in response.iter_content(chunk_size=chunk_size):  
                         file.write(data)  
             else:
-                print('链接异常')
+                print('鏈接異常')
     time.sleep(10)

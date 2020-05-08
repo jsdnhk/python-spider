@@ -68,13 +68,13 @@ def parse_other(doc_id):
         path = os.path.join(doc_id, str(index) + '.jpg')
         with open(path, 'wb') as f:
             f.write(content)
-    print("图片保存在" + doc_id + "文件夹")
+    print("圖片保存在" + doc_id + "文件夾")
 
 
 def save_file(filename, content):
     with open(filename, 'w', encoding='utf8') as f:
         f.write(content)
-        print('已保存为:' + filename)
+        print('已保存爲:' + filename)
 
 
 # test_txt_url = 'https://wenku.baidu.com/view/cbb4af8b783e0912a3162a89.html?from=search'
@@ -82,7 +82,7 @@ def save_file(filename, content):
 # test_pdf_url = 'https://wenku.baidu.com/view/dd6e15c1227916888586d795.html?from=search'
 # test_xls_url = 'https://wenku.baidu.com/view/eb4a5bb7312b3169a551a481.html?from=search'
 def main():
-    url = input('请输入要下载的文库URL地址')
+    url = input('請輸入要下載的文庫URL地址')
     content = fetch_url(url)
     doc_id = get_doc_id(url)
     type = parse_type(content)

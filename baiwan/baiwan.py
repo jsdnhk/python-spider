@@ -7,28 +7,28 @@ import time, re, types, os
 
 
 """
-代码写的匆忙，本来想再重构下，完善好注释再发，但是比较忙，想想算了，所以自行完善吧！写法很不规范，勿见怪。
+代碼寫的匆忙，本來想再重構下，完善好註釋再發，但是比較忙，想想算了，所以自行完善吧！寫法很不規範，勿見怪。
 
 作者：  Jack Cui
 Website:http://cuijiahua.com
-注:     本软件仅用于学习交流，请勿用于任何商业用途！
+注:     本軟件僅用於學習交流，請勿用於任何商業用途！
 """
 
 class BaiWan():
 	def __init__(self):
 		# 百度知道搜索接口
 		self.baidu = 'http://zhidao.baidu.com/search?'
-		# 百万英雄及接口,每个人的接口都不一样，里面包含的手机信息，因此不公布，请自行抓包，有疑问欢迎留言：http://cuijiahua.com/liuyan.html
+		# 百萬英雄及接口,每個人的接口都不一樣，裏面包含的手機信息，因此不公佈，請自行抓包，有疑問歡迎留言：http://cuijiahua.com/liuyan.html
 		self.api = 'https://api-spe-ttl.ixigua.com/xxxxxxx={}'.format(int(time.time()*1000))
 
-	# 获取答案并解析问题
+	# 獲取答案並解析問題
 	def get_question(self):
 		to = True
 		while to:
 			list_dir = os.listdir('./')
 			if 'question.txt' not in list_dir:
 				fw = open('question.txt', 'w')
-				fw.write('百万英雄尚未出题请稍后!')
+				fw.write('百萬英雄尚未出題請稍後!')
 				fw.close()		
 			go = True
 			while go:
@@ -84,7 +84,7 @@ class BaiWan():
 					question = a + ' ' + b + ' ' + c + ' ' + question.replace('以下', '')
 			else:
 				alternative_answers = []
-			# 根据问题和备选答案搜索答案
+			# 根據問題和備選答案搜索答案
 			self.search(question, alternative_answers)
 			time.sleep(1)
 
@@ -92,7 +92,7 @@ class BaiWan():
 		print(question)
 		print(alternative_answers)
 		infos = {"word":question}
-		# 调用百度接口
+		# 調用百度接口
 		url = self.baidu + 'lm=0&rn=10&pn=0&fr=search&ie=gbk&' + urllib.parse.urlencode(infos, encoding='GB2312')
 		print(url)
 		headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',
@@ -106,7 +106,7 @@ class BaiWan():
 		for answer in answers:
 			print(answer.text)
 
-		# 推荐答案
+		# 推薦答案
 		recommend = ''
 		if alternative_answers != []:
 			best = []
@@ -126,42 +126,42 @@ class BaiWan():
 					statistics[each] = 1
 				else:
 					statistics[each] += 1
-			errors = ['没有', '不是', '不对', '不正确','错误','不包括','不包含','不在','错']
+			errors = ['沒有', '不是', '不對', '不正確','錯誤','不包括','不包含','不在','錯']
 			error_list = list(map(lambda x: x in question, errors))
 			print(error_list)
 			if sum(error_list) >= 1:
 				for each_answer in alternative_answers:
 					if each_answer not in statistics.items():
 						recommend = each_answer
-						print('推荐答案：', recommend)
+						print('推薦答案：', recommend)
 						break
 			elif statistics != {}:
 				recommend = sorted(statistics.items(), key=lambda e:e[1], reverse=True)[0][0]
-				print('推荐答案：', recommend)
+				print('推薦答案：', recommend)
 
-		# 写入文件
+		# 寫入文件
 		with open('file.txt', 'w') as f:
-			f.write('问题：' + question)
+			f.write('問題：' + question)
 			f.write('\n')
 			f.write('*' * 50)
 			f.write('\n')
 			if alternative_answers != []:
-				f.write('选项：')
+				f.write('選項：')
 				for i in range(len(alternative_answers)):
 					f.write(alternative_answers[i])
 					f.write('  ')
 			f.write('\n')
 			f.write('*' * 50)
 			f.write('\n')
-			f.write('参考答案：\n')
+			f.write('參考答案：\n')
 			for answer in answers:
 				f.write(answer.text)
 				f.write('\n')
 			f.write('*' * 50)
 			f.write('\n')
 			if recommend != '':
-				f.write('最终答案请自行斟酌！\t')
-				f.write('推荐答案：' + sorted(statistics.items(), key=lambda e:e[1], reverse=True)[0][0])
+				f.write('最終答案請自行斟酌！\t')
+				f.write('推薦答案：' + sorted(statistics.items(), key=lambda e:e[1], reverse=True)[0][0])
 
 
 if __name__ == '__main__':

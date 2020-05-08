@@ -10,16 +10,16 @@ import time, sys
 class huoche(object):
 	driver_name = ''
 	executable_path = ''
-	#用户名，密码
+	#用戶名，密碼
 	username = u"xxx"
 	passwd = u"xxx"
-	# cookies值得自己去找, 下面两个分别是沈阳, 哈尔滨
+	# cookies值得自己去找, 下面兩個分別是瀋陽, 哈爾濱
 	starts = u"%u6C88%u9633%2CSYT"
 	ends = u"%u54C8%u5C14%u6EE8%2CHBB"
 	
-	# 时间格式2018-01-19
+	# 時間格式2018-01-19
 	dtime = u"2018-01-19"
-	# 车次，选择第几趟，0则从上之下依次点击
+	# 車次，選擇第幾趟，0則從上之下依次點擊
 	order = 0
 	###乘客名
 	users = [u"xxx",u"xxx"]
@@ -27,7 +27,7 @@ class huoche(object):
 	xb = u"二等座"
 	pz = u"成人票"
 
-	"""网址"""
+	"""網址"""
 	ticket_url = "https://kyfw.12306.cn/otn/leftTicket/init"
 	login_url = "https://kyfw.12306.cn/otn/login/init"
 	initmy_url = "https://kyfw.12306.cn/otn/index/initMy12306"
@@ -42,7 +42,7 @@ class huoche(object):
 		self.driver.fill("loginUserDTO.user_name", self.username)
 		# sleep(1)
 		self.driver.fill("userDTO.password", self.passwd)
-		print(u"等待验证码，自行输入...")
+		print(u"等待驗證碼，自行輸入...")
 		while True:
 			if self.driver.url != self.initmy_url:
 				sleep(1)
@@ -56,9 +56,9 @@ class huoche(object):
 		# sleep(1)
 		self.driver.visit(self.ticket_url)
 		try:
-			print(u"购票页面开始...")
+			print(u"購票頁面開始...")
 			# sleep(1)
-			# 加载查询信息
+			# 加載查詢信息
 			self.driver.cookies.add({"_jc_save_fromStation": self.starts})
 			self.driver.cookies.add({"_jc_save_toStation": self.ends})
 			self.driver.cookies.add({"_jc_save_fromDate": self.dtime})
@@ -68,39 +68,39 @@ class huoche(object):
 			count = 0
 			if self.order != 0:
 				while self.driver.url == self.ticket_url:
-					self.driver.find_by_text(u"查询").click()
+					self.driver.find_by_text(u"查詢").click()
 					count += 1
-					print(u"循环点击查询... 第 %s 次" % count)
+					print(u"循環點擊查詢... 第 %s 次" % count)
 					# sleep(1)
 					try:
-						self.driver.find_by_text(u"预订")[self.order - 1].click()
+						self.driver.find_by_text(u"預訂")[self.order - 1].click()
 					except Exception as e:
 						print(e)
-						print(u"还没开始预订")
+						print(u"還沒開始預訂")
 						continue
 			else:
 				while self.driver.url == self.ticket_url:
-					self.driver.find_by_text(u"查询").click()
+					self.driver.find_by_text(u"查詢").click()
 					count += 1
-					print(u"循环点击查询... 第 %s 次" % count)
+					print(u"循環點擊查詢... 第 %s 次" % count)
 					# sleep(0.8)
 					try:
-						for i in self.driver.find_by_text(u"预订"):
+						for i in self.driver.find_by_text(u"預訂"):
 							i.click()
 							sleep(1)
 					except Exception as e:
 						print(e)
-						print(u"还没开始预订 %s" % count)
+						print(u"還沒開始預訂 %s" % count)
 						continue
-			print(u"开始预订...")
+			print(u"開始預訂...")
 			# sleep(3)
 			# self.driver.reload()
 			sleep(1)
-			print(u'开始选择用户...')
+			print(u'開始選擇用戶...')
 			for user in self.users:
 				self.driver.find_by_text(user).last.click()
 
-			print(u"提交订单...")
+			print(u"提交訂單...")
 			sleep(1)
 			self.driver.find_by_text(self.pz).click()
 			self.driver.find_by_id('').select(self.pz)
@@ -108,12 +108,12 @@ class huoche(object):
 			self.driver.find_by_text(self.xb).click()
 			sleep(1)
 			self.driver.find_by_id('submitOrder_id').click()
-			print(u"开始选座...")
+			print(u"開始選座...")
 			self.driver.find_by_id('1D').last.click()
 			self.driver.find_by_id('1F').last.click()
 
 			sleep(1.5)
-			print(u"确认选座...")
+			print(u"確認選座...")
 			self.driver.find_by_id('qr_submit_id').click()
 
 		except Exception as e:

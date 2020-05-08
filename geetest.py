@@ -2,7 +2,7 @@
 import random
 import re
 import time
-# 图片转换
+# 圖片轉換
 import base64
 from urllib.request import urlretrieve
 
@@ -17,9 +17,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 def save_base64img(data_str, save_name):
     """
-    将 base64 数据转化为图片保存到指定位置
-    :param data_str: base64 数据，不包含类型
-    :param save_name: 保存的全路径
+    將 base64 數據轉化爲圖片保存到指定位置
+    :param data_str: base64 數據，不包含類型
+    :param save_name: 保存的全路徑
     """
     img_data = base64.b64decode(data_str)
     file = open(save_name, 'wb')
@@ -29,13 +29,13 @@ def save_base64img(data_str, save_name):
 
 def get_base64_by_canvas(driver, class_name, contain_type):
     """
-    将 canvas 标签内容转换为 base64 数据
-    :param driver: webdriver 对象
-    :param class_name: canvas 标签的类名
-    :param contain_type: 返回的数据是否包含类型
-    :return: base64 数据
+    將 canvas 標籤內容轉換爲 base64 數據
+    :param driver: webdriver 對象
+    :param class_name: canvas 標籤的類名
+    :param contain_type: 返回的數據是否包含類型
+    :return: base64 數據
     """
-    # 防止图片未加载完就下载一张空图
+    # 防止圖片未加載完就下載一張空圖
     bg_img = ''
     while len(bg_img) < 5000:
         getImgJS = 'return document.getElementsByClassName("' + class_name + '")[0].toDataURL("image/png");'
@@ -50,11 +50,11 @@ def get_base64_by_canvas(driver, class_name, contain_type):
 
 def save_bg(driver, bg_path="bg.png", bg_class="geetest_canvas_bg geetest_absolute"):
     """
-    保存包含缺口的背景图
-    :param driver: webdriver 对象
-    :param bg_path: 保存路径
-    :param bg_class: 背景图的 class 属性
-    :return: 保存路径
+    保存包含缺口的背景圖
+    :param driver: webdriver 對象
+    :param bg_path: 保存路徑
+    :param bg_class: 背景圖的 class 屬性
+    :return: 保存路徑
     """
     bg_img_data = get_base64_by_canvas(driver, bg_class, False)
     save_base64img(bg_img_data, bg_path)
@@ -63,11 +63,11 @@ def save_bg(driver, bg_path="bg.png", bg_class="geetest_canvas_bg geetest_absolu
 
 def save_full_bg(driver, full_bg_path="fbg.png", full_bg_class="geetest_canvas_fullbg geetest_fade geetest_absolute"):
     """
-    保存完整的的背景图
-    :param driver: webdriver 对象
-    :param full_bg_path: 保存路径
-    :param full_bg_class: 完整背景图的 class 属性
-    :return: 保存路径
+    保存完整的的背景圖
+    :param driver: webdriver 對象
+    :param full_bg_path: 保存路徑
+    :param full_bg_class: 完整背景圖的 class 屬性
+    :return: 保存路徑
     """
     bg_img_data = get_base64_by_canvas(driver, full_bg_class, False)
     save_base64img(bg_img_data, full_bg_path)
@@ -83,7 +83,7 @@ class Crack():
 
 	def open(self):
 		"""
-		打开浏览器,并输入查询内容
+		打開瀏覽器,並輸入查詢內容
 		"""
 		self.browser.get(self.url)
 		keyword = self.wait.until(EC.presence_of_element_located((By.ID, 'keyword_qycx')))
@@ -93,8 +93,8 @@ class Crack():
 
 	def get_images(self, bg_filename = 'bg.jpg', fullbg_filename = 'fullbg.jpg'):
 		"""
-		获取验证码图片
-		:return: 图片的location信息
+		獲取驗證碼圖片
+		:return: 圖片的location信息
 		"""
 		bg = []
 		fullgb = []
@@ -118,16 +118,16 @@ class Crack():
 			fullbg_location_list.append(location)
 
 		urlretrieve(url = bg_url, filename = bg_filename)
-		print('缺口图片下载完成')
+		print('缺口圖片下載完成')
 		urlretrieve(url = fullgb_url, filename = fullbg_filename)
-		print('背景图片下载完成')
+		print('背景圖片下載完成')
 		return bg_location_list, fullbg_location_list
 
 	def get_merge_image(self, filename, location_list):
 		"""
-		根据位置对图片进行合并还原
-		:filename:图片
-		:location_list:图片位置
+		根據位置對圖片進行合併還原
+		:filename:圖片
+		:location_list:圖片位置
 		"""
 		im = image.open(filename)
 		new_im = image.new('RGB', (260,116))
@@ -158,9 +158,9 @@ class Crack():
 
 	def get_merge_image(self, filename, location_list):
 		"""
-		根据位置对图片进行合并还原
-		:filename:图片
-		:location_list:图片位置
+		根據位置對圖片進行合併還原
+		:filename:圖片
+		:location_list:圖片位置
 		"""
 		im = image.open(filename)
 		new_im = image.new('RGB', (260,116))
@@ -191,14 +191,14 @@ class Crack():
 
 	def is_pixel_equal(self, img1, img2, x, y):
 		"""
-		判断两个像素是否相同
-		:param image1: 图片1
-		:param image2: 图片2
+		判斷兩個像素是否相同
+		:param image1: 圖片1
+		:param image2: 圖片2
 		:param x: 位置x
 		:param y: 位置y
 		:return: 像素是否相同
 		"""
-		# 取两个图片的像素点
+		# 取兩個圖片的像素點
 		pix1 = img1.load()[x, y]
 		pix2 = img2.load()[x, y]
 		threshold = 60
@@ -209,9 +209,9 @@ class Crack():
 
 	def get_gap(self, img1, img2):
 		"""
-		获取缺口偏移量
-		:param img1: 不带缺口图片
-		:param img2: 带缺口图片
+		獲取缺口偏移量
+		:param img1: 不帶缺口圖片
+		:param img2: 帶缺口圖片
 		:return:
 		"""
 		left = 43
@@ -224,44 +224,44 @@ class Crack():
 
 	def get_track(self, distance):
 		"""
-		根据偏移量获取移动轨迹
+		根據偏移量獲取移動軌跡
 		:param distance: 偏移量
-		:return: 移动轨迹
+		:return: 移動軌跡
 		"""
-		# 移动轨迹
+		# 移動軌跡
 		track = []
-		# 当前位移
+		# 當前位移
 		current = 0
-		# 减速阈值
+		# 減速閾值
 		mid = distance * 4 / 5
-		# 计算间隔
+		# 計算間隔
 		t = 0.2
 		# 初速度
 		v = 0
         
 		while current < distance:
 			if current < mid:
-				# 加速度为正2
+				# 加速度爲正2
 				a = 2
 			else:	
-				# 加速度为负3
+				# 加速度爲負3
 				a = -3
 			# 初速度v0
 			v0 = v
-			# 当前速度v = v0 + at
+			# 當前速度v = v0 + at
 			v = v0 + a * t
-			# 移动距离x = v0t + 1/2 * a * t^2
+			# 移動距離x = v0t + 1/2 * a * t^2
 			move = v0 * t + 1 / 2 * a * t * t
-			# 当前位移
+			# 當前位移
 			current += move
-			# 加入轨迹
+			# 加入軌跡
 			track.append(round(move))
 		return track
 
 	def get_slider(self):
 		"""
-		获取滑块
-		:return: 滑块对象
+		獲取滑塊
+		:return: 滑塊對象
 		"""
 		while True:
 			try:
@@ -273,9 +273,9 @@ class Crack():
 
 	def move_to_gap(self, slider, track):
 		"""
-		拖动滑块到缺口处
-		:param slider: 滑块
-		:param track: 轨迹
+		拖動滑塊到缺口處
+		:param slider: 滑塊
+		:param track: 軌跡
 		:return:
 		"""
 		ActionChains(self.browser).click_and_hold(slider).perform()
@@ -287,17 +287,17 @@ class Crack():
 		ActionChains(self.browser).release().perform()
 
 	def crack(self):
-		# 打开浏览器
+		# 打開瀏覽器
 		self.open()
 
-		# 保存的图片名字
+		# 保存的圖片名字
 		bg_filename = 'bg.jpg'
 		fullbg_filename = 'fullbg.jpg'
 
-		# 获取图片
+		# 獲取圖片
 		bg_location_list, fullbg_location_list = self.get_images(bg_filename, fullbg_filename)
 
-		# 根据位置对图片进行合并还原
+		# 根據位置對圖片進行合併還原
 		# 方法1
 		# bg_img = self.get_merge_image(bg_filename, bg_location_list)
 		# fullbg_img = self.get_merge_image(fullbg_filename, fullbg_location_list)
@@ -305,7 +305,7 @@ class Crack():
 		bg_img = save_bg(self.browser)
 		full_bg_img = save_full_bg(self.browser)
 
-		# 获取缺口位置
+		# 獲取缺口位置
 		# 方法1
 		# gap = self.get_gap(fullbg_img, bg_img)
 		# 方法2
@@ -313,16 +313,16 @@ class Crack():
 		print('缺口位置', gap)
 
 		track = self.get_track(gap-self.BORDER)
-		print('滑动滑块')
+		print('滑動滑塊')
 		print(track)
 
-		# # 点按呼出缺口
+		# # 點按呼出缺口
 		# slider = self.get_slider()
-		# # 拖动滑块到缺口处
+		# # 拖動滑塊到缺口處
 		# self.move_to_gap(slider, track)
 
 if __name__ == '__main__':
-	print('开始验证')
-	crack = Crack(u'中国移动')
+	print('開始驗證')
+	crack = Crack(u'中國移動')
 	crack.crack()
-	print('验证成功')
+	print('驗證成功')

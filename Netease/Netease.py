@@ -18,7 +18,7 @@ class Encrypyed():
 		self.nonce = '0CoJUm6Qyw8W8jud'
 		self.pub_key = '010001'
 
-	# 登录加密算法, 基于https://github.com/stkevintan/nw_musicbox脚本实现
+	# 登錄加密算法, 基於https://github.com/stkevintan/nw_musicbox腳本實現
 	def encrypted_request(self, text):
 		text = json.dumps(text)
 		sec_key = self.create_secret_key(16)
@@ -46,7 +46,7 @@ class Encrypyed():
 
 class Song():
 	"""
-	歌曲对象，用于存储歌曲的信息
+	歌曲對象，用於存儲歌曲的信息
 	"""
 	def __init__(self, song_id, song_name, song_num, song_url=None):
 		self.song_id = song_id
@@ -56,7 +56,7 @@ class Song():
 
 class Crawler():
 	"""
-	网易云爬取API
+	網易雲爬取API
 	"""
 	def __init__(self, timeout=60, cookie_path='.'):
 		self.headers = {
@@ -78,7 +78,7 @@ class Crawler():
 
 	def post_request(self, url, params):
 		"""
-		Post请求
+		Post請求
 		:return: 字典
 		"""
 
@@ -93,9 +93,9 @@ class Crawler():
 	def search(self, search_content, search_type, limit=9):
 		"""
 		搜索API
-		:params search_content: 搜索内容
-		:params search_type: 搜索类型
-		:params limit: 返回结果数量
+		:params search_content: 搜索內容
+		:params search_type: 搜索類型
+		:params limit: 返回結果數量
 		:return: 字典.
 		"""
 
@@ -106,12 +106,12 @@ class Crawler():
 
 	def search_song(self, song_name, song_num, quiet=True, limit=9):
 		"""
-		根据音乐名搜索
-		:params song_name: 音乐名
-		:params song_num: 下载的歌曲数
-		:params quiet: 自动选择匹配最优结果
-		:params limit: 返回结果数量
-		:return: Song独享
+		根據音樂名搜索
+		:params song_name: 音樂名
+		:params song_num: 下載的歌曲數
+		:params quiet: 自動選擇匹配最優結果
+		:params limit: 返回結果數量
+		:return: Song獨享
 		"""
 
 		result = self.search(song_name, search_type=1, limit=limit)
@@ -127,17 +127,17 @@ class Crawler():
 
 	def get_song_url(self, song_id, bit_rate=320000):
 		"""
-		获得歌曲的下载地址
-		:params song_id: 音乐ID<int>.
+		獲得歌曲的下載地址
+		:params song_id: 音樂ID<int>.
 		:params bit_rate: {'MD 128k': 128000, 'HD 320k': 320000}
-		:return: 歌曲下载地址
+		:return: 歌曲下載地址
 		"""
 
 		url = 'http://music.163.com/weapi/song/enhance/player/url?csrf_token='
 		csrf = ''
 		params = {'ids': [song_id], 'br': bit_rate, 'csrf_token': csrf}
 		result = self.post_request(url, params)
-		# 歌曲下载地址
+		# 歌曲下載地址
 		song_url = result['data'][0]['url']
 
 		# 歌曲不存在
@@ -148,11 +148,11 @@ class Crawler():
 
 	def get_song_by_url(self, song_url, song_name, song_num, folder):
 		"""
-		下载歌曲到本地
-		:params song_url: 歌曲下载地址
+		下載歌曲到本地
+		:params song_url: 歌曲下載地址
 		:params song_name: 歌曲名字
-		:params song_num: 下载的歌曲数
-		:params folder: 保存路径
+		:params song_num: 下載的歌曲數
+		:params folder: 保存路徑
 		"""
 		if not os.path.exists(folder):
 			os.makedirs(folder)
@@ -178,7 +178,7 @@ class Crawler():
 
 class Netease():
 	"""
-	网易云音乐下载
+	網易雲音樂下載
 	"""
 	def __init__(self, timeout, folder, quiet, cookie_path):
 		self.crawler = Crawler(timeout, cookie_path)
@@ -187,25 +187,25 @@ class Netease():
 
 	def download_song_by_search(self, song_name, song_num):
 		"""
-		根据歌曲名进行搜索
+		根據歌曲名進行搜索
 		:params song_name: 歌曲名字
-		:params song_num: 下载的歌曲数
+		:params song_num: 下載的歌曲數
 		"""
 
 		try:
 			song = self.crawler.search_song(song_name, song_num, self.quiet)
 		except:
 			click.echo('download_song_by_serach error')
-		# 如果找到了音乐, 则下载
+		# 如果找到了音樂, 則下載
 		if song != None:
 			self.download_song_by_id(song.song_id, song.song_name, song.song_num, self.folder)
 
 	def download_song_by_id(self, song_id, song_name, song_num, folder='.'):
 		"""
-		通过歌曲的ID下载
+		通過歌曲的ID下載
 		:params song_id: 歌曲ID
 		:params song_name: 歌曲名
-		:params song_num: 下载的歌曲数
+		:params song_num: 下載的歌曲數
 		:params folder: 保存地址
 		"""
 		try:
@@ -226,7 +226,7 @@ if __name__ == '__main__':
 	cookie_path = 'Cookie'
 	netease = Netease(timeout, output, quiet, cookie_path)
 	music_list_name = 'music_list.txt'
-	# 如果music列表存在, 那么开始下载
+	# 如果music列表存在, 那麼開始下載
 	if os.path.exists(music_list_name):
 		with open(music_list_name, 'r') as f:
 			music_list = list(map(lambda x: x.strip(), f.readlines()))

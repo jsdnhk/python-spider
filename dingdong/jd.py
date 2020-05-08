@@ -18,16 +18,16 @@ def search_goods(keyword, pages):
 	"""
 	搜索商品
 	Parameters:
-		keyword - str 搜索关键词
-		pages - int 搜索页数
+		keyword - str 搜索關鍵詞
+		pages - int 搜索頁數
 	Returns:
-		goods_urls - list 商品链接
+		goods_urls - list 商品鏈接
 	"""
-	# 创建session
+	# 創建session
 	sess = requests.Session()
 	goods_urls = []
 	for page in range(pages):
-		# 第一次加载
+		# 第一次加載
 		search_headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
 			'Accept-Encoding': 'gzip, deflate, br',
 			'Accept-Language': 'zh-CN,zh;q=0.9',
@@ -51,18 +51,18 @@ def search_goods(keyword, pages):
 			'click':'0'}
 		search_req = sess.get(url=search_url, params=search_params, headers=search_headers, verify=False)
 		search_req.encoding = 'utf-8'
-		# 匹配商品链接
+		# 匹配商品鏈接
 		search_req_bf = bs4.BeautifulSoup(search_req.text, 'lxml')
 		for item in search_req_bf.find_all('li', class_='gl-item'):
 			item_url = item.div.div.a.get('href')
-			# 滤除广告
+			# 濾除廣告
 			if 'ccc-x.jd.com' not in item_url:
 				goods_urls.append(item_url)
-		# 继续加载log_id
+		# 繼續加載log_id
 		log_id = re.findall("log_id:'(.*)',", search_req.text)[0]
 		
-		# 第二次加载
-		# 继续加载url
+		# 第二次加載
+		# 繼續加載url
 		search_more_url = 'https://search.jd.com/s_new.php'
 		search_more_headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
 			'Accept-Encoding': 'gzip, deflate, br',
@@ -86,31 +86,31 @@ def search_goods(keyword, pages):
 			'tpl':'1_M'}
 		search_more_req = sess.get(url=search_more_url, params=search_more_params, headers=search_more_headers, verify=False)
 		search_more_req.encoding = 'utf-8'
-		# 匹配商品链接
+		# 匹配商品鏈接
 		search_more_req_bf = bs4.BeautifulSoup(search_more_req.text, 'lxml')
 		for item in search_more_req_bf.find_all('li', class_='gl-item'):
 			item_url = item.div.div.a.get('href')
-			# 滤除广告
+			# 濾除廣告
 			if 'ccc-x.jd.com' not in item_url:
 				goods_urls.append(item_url)
 	# 去重
 	goods_urls = list(set(goods_urls))
-	# 链接合成
+	# 鏈接合成
 	goods_urls = list(map(lambda x: 'http:'+x, goods_urls))
 	return goods_urls
 
 def goods_images(goods_url):
 	"""
-	获得商品晒图
+	獲得商品曬圖
 	Parameters:
-		goods_url - str 商品链接
+		goods_url - str 商品鏈接
 	Returns:
-		image_urls - list 图片链接
+		image_urls - list 圖片鏈接
 	"""
 	image_urls = []
 	productId = goods_url.split('/')[-1].split('.')[0]
 
-	# 评论url
+	# 評論url
 	comment_url = 'https://sclub.jd.com/comment/productPageComments.action'
 	comment_params = {'productId':productId,
 		'score':'0',
@@ -128,12 +128,12 @@ def goods_images(goods_url):
 
 	comment_req = requests.get(url=comment_url, params=comment_params, headers=comment_headers, verify=False)
 	html = json.loads(comment_req.text)
-	# 获得晒图个数
+	# 獲得曬圖個數
 	imageListCount = html['imageListCount']
-	# 计算晒图页数,向上取整
+	# 計算曬圖頁數,向上取整
 	pages = math.ceil(imageListCount / 10)
 	for page in range(1, pages+1):
-		# 获取晒图图片url
+		# 獲取曬圖圖片url
 		club_url = 'https://club.jd.com/discussion/getProductPageImageCommentList.action'
 		now = time.time()
 		now_str = str(now).split('.')
@@ -150,17 +150,17 @@ def goods_images(goods_url):
 			image_urls.append(img['imageUrl'])
 	# 去重
 	image_urls = list(set(image_urls))
-	# 链接合成
+	# 鏈接合成
 	image_urls = list(map(lambda x: 'http:'+x, image_urls))
 
 	return image_urls
 
 def download_image(path, image_url):
 	"""
-	图片下载
+	圖片下載
 	Parameters:
-		path - str 图片保存地址
-		image_url - str 图片下载地址
+		path - str 圖片保存地址
+		image_url - str 圖片下載地址
 	Returns:
 		None
 	"""
@@ -176,7 +176,7 @@ def download_image(path, image_url):
 		chunk_size = 1024
 		content_size = int(response.headers['content-length'])
 		if response.status_code == 200:
-			sys.stdout.write(filename+'下载中:\n')
+			sys.stdout.write(filename+'下載中:\n')
 			sys.stdout.write('    [文件大小]:%0.2f MB\n' % (content_size / chunk_size / 1024))
 
 			with open(image_path, 'wb') as file:
@@ -184,16 +184,16 @@ def download_image(path, image_url):
 					file.write(data)
 					size += len(data)
 					file.flush()
-					sys.stdout.write('    [下载进度]:%.2f%%' % float(size / content_size * 100) + '\r')
+					sys.stdout.write('    [下載進度]:%.2f%%' % float(size / content_size * 100) + '\r')
 					sys.stdout.flush()
 
 def run(path, keyword, num):
 	"""
-	运行函数
+	運行函數
 	Parameters:
-		path - str 图片保存目录
-		keyword - str 关键词
-		num - int 下载的商店个数
+		path - str 圖片保存目錄
+		keyword - str 關鍵詞
+		num - int 下載的商店個數
 	Returns:
 		None
 	"""

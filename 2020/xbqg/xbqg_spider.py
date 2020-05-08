@@ -21,7 +21,7 @@ def get_content(target):
 
 if __name__ == '__main__':
     server = 'https://www.xsbiquge.com'
-    book_name = '诡秘之主.txt'
+    book_name = '詭祕之主.txt'
     target = 'https://www.xsbiquge.com/15_15338/'
     req = requests.get(url = target)
     req.encoding = 'utf-8'

@@ -96,8 +96,8 @@ class University:
         jpg = Image.open('{}/code.jpg'.format(os.getcwd()))
         jpg.show()
         jpg.close
-        code = input('输入验证码：')
-        RadioButtonList1 = u"学生"
+        code = input('輸入驗證碼：')
+        RadioButtonList1 = u"學生"
         data = {
             "__VIEWSTATE": __VIEWSTATE,
             "txtUserName": self.student.user,
@@ -121,7 +121,7 @@ class University:
             return
         pattern = re.compile('<span id="xhxm">(.*?)</span>')
         xhxm = re.findall(pattern, logcont)
-        name = xhxm[0].replace('同学', '')
+        name = xhxm[0].replace('同學', '')
         self.student.urlname = urllib.parse.quote_plus(str(name))
         return True
 
@@ -136,9 +136,9 @@ class University:
         contents = re.findall(pattern, kbcont)
         tool = Tool()
         f = open(os.getcwd()+'/zhengfang.txt', 'w')
-        f.write(u'本学期课表:'+'\n')
+        f.write(u'本學期課表:'+'\n')
         cnt = 1
-        l = [u'周一', u'周二', u'周三', u'周四', u'周五', u'周六', u'周日']
+        l = [u'週一', u'週二', u'週三', u'週四', u'週五', u'週六', u'週日']
         for day in l:
             for i in contents:
                 if u'星期' in i:
@@ -172,14 +172,14 @@ class University:
             "ddlXN": "",
             "ddlXQ": "",
             "ddl_kcxz": "",
-            "btn_zcj": u'历年成绩'
+            "btn_zcj": u'歷年成績'
         }
         grares = self.session.post(gradeurl, data=data)
         grades = Getgrade(grares)
         totup = 0
         totdown = 0
         f = open(os.getcwd()+'/zhengfang.txt', 'a+')
-        f.write('\n\n\n'+u'历年成绩:'+'\n')
+        f.write('\n\n\n'+u'歷年成績:'+'\n')
         for i in grades[0]:
             f.write('%-13s\t' % i)
         f.write('\n')
@@ -187,10 +187,10 @@ class University:
             for one in each:
                 f.write('%-15s\t' % each[one])
             f.write('\n')
-            totup = totup + float(each[u'绩点']) * float(each[u'学分'])
-            totdown = totdown + float(each[u'学分'])
-        f.write('\n'+u'平均绩点: '+'%.2f\t\t\t' % (totup / totdown) +
-                u'总学分绩点: '+'%.2f\t\t\t' % totup + u'总学分: '+'%.2f\n' % totdown)
+            totup = totup + float(each[u'績點']) * float(each[u'學分'])
+            totdown = totdown + float(each[u'學分'])
+        f.write('\n'+u'平均績點: '+'%.2f\t\t\t' % (totup / totdown) +
+                u'總學分績點: '+'%.2f\t\t\t' % totup + u'總學分: '+'%.2f\n' % totdown)
         f.close()
         print('Download grade succeed!')
 
@@ -204,7 +204,7 @@ class University:
         gtrhtml = etree.HTML(gtrcontent)
         trs = gtrhtml.xpath('//table[@class="datelist"]/tr')
         f = open(os.getcwd()+'/zhengfang.txt', 'a+')
-        f.write('\n\n\n'+u'等级考试成绩:'+'\n')
+        f.write('\n\n\n'+u'等級考試成績:'+'\n')
         results = Getgradetestresults(trs)
         for one in results[0]:
             f.write('%-10s\t' % one)
@@ -218,9 +218,9 @@ class University:
 
 
 if __name__ == "__main__":
-    url = input("学校教务网站(如http://115.236.84.162)：")
-    user = input("学号：")
-    pswd = getpass.getpass("密码：")
+    url = input("學校教務網站(如http://115.236.84.162)：")
+    user = input("學號：")
+    pswd = getpass.getpass("密碼：")
     who = Who(user, pswd)
     univ = University(who, url)
     if univ.Login():

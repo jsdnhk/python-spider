@@ -6,20 +6,20 @@ import requests, json, time, re, os, sys, time
 class DouYin(object):
 	def __init__(self):
 		"""
-		抖音App视频下载
+		抖音App視頻下載
 		"""
-		#SSL认证
+		#SSL認證
 		pass
 
 	def get_video_urls(self, user_id):
 		"""
-		获得视频播放地址
+		獲得視頻播放地址
 		Parameters:
-			nickname：查询的用户名
+			nickname：查詢的用戶名
 		Returns:
-			video_names: 视频名字列表
-			video_urls: 视频链接列表
-			aweme_count: 视频数量
+			video_names: 視頻名字列表
+			video_urls: 視頻鏈接列表
+			aweme_count: 視頻數量
 		"""
 		video_names = []
 		video_urls = []
@@ -38,7 +38,7 @@ class DouYin(object):
 		i = 1
 		for each in html['aweme_list']:
 			share_desc = each['share_info']['share_desc']
-			if '抖音-原创音乐短视频社区' == share_desc:
+			if '抖音-原創音樂短視頻社區' == share_desc:
 				video_names.append(str(i) + '.mp4')
 				i += 1
 			else:
@@ -49,11 +49,11 @@ class DouYin(object):
 
 	def get_download_url(self, video_url):
 		"""
-		获得视频播放地址
+		獲得視頻播放地址
 		Parameters:
-			video_url：视频播放地址
+			video_url：視頻播放地址
 		Returns:
-			download_url: 视频下载地址
+			download_url: 視頻下載地址
 		"""
 		req = requests.get(url = video_url, verify = False)
 		bf = BeautifulSoup(req.text, 'lxml')
@@ -65,7 +65,7 @@ class DouYin(object):
 
 	def video_downloader(self, video_url, video_name):
 		"""
-		视频下载
+		視頻下載
 		Parameters:
 			None
 		Returns:
@@ -84,26 +84,26 @@ class DouYin(object):
 						size += len(data)
 						file.flush()
 
-					sys.stdout.write('    [下载进度]:%.2f%%' % float(size / content_size * 100))
+					sys.stdout.write('    [下載進度]:%.2f%%' % float(size / content_size * 100))
 					sys.stdout.flush()
 		time.sleep(1)
 
 
 	def run(self):
 		"""
-		运行函数
+		運行函數
 		Parameters:
 			None
 		Returns:
 			None
 		"""
 		self.hello()
-		# user_id = input('请输入ID(例如13978338):')
+		# user_id = input('請輸入ID(例如13978338):')
 		user_id = 'sm666888'
 		video_names, video_urls, nickname = self.get_video_urls(user_id)
 		if nickname not in os.listdir():
 			os.mkdir(nickname)
-		sys.stdout.write('视频下载中:\n')
+		sys.stdout.write('視頻下載中:\n')
 		for num in range(len(video_urls)):
 			print('  %s\n' % video_urls[num])
 			video_url = self.get_download_url(video_urls[num])
@@ -118,14 +118,14 @@ class DouYin(object):
 
 	def hello(self):
 		"""
-		打印欢迎界面
+		打印歡迎界面
 		Parameters:
 			None
 		Returns:
 			None
 		"""
 		print('*' * 100)
-		print('\t\t\t\t抖音App视频下载小助手')
+		print('\t\t\t\t抖音App視頻下載小助手')
 		print('*' * 100)
 
 		

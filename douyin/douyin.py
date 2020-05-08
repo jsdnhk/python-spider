@@ -6,7 +6,7 @@ import urllib
 class DouYin(object):
 	def __init__(self, width = 500, height = 300):
 		"""
-		抖音App视频下载
+		抖音App視頻下載
 		"""
 		self.headers = {
 			'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
@@ -22,13 +22,13 @@ class DouYin(object):
 
 	def get_video_urls(self, user_id, type_flag='f'):
 		"""
-		获得视频播放地址
+		獲得視頻播放地址
 		Parameters:
-			user_id：查询的用户UID
+			user_id：查詢的用戶UID
 		Returns:
-			video_names: 视频名字列表
-			video_urls: 视频链接列表
-			nickname: 用户昵称
+			video_names: 視頻名字列表
+			video_urls: 視頻鏈接列表
+			nickname: 用戶暱稱
 		"""
 		video_names = []
 		video_urls = []
@@ -55,7 +55,7 @@ class DouYin(object):
 			req = requests.post(sign_api, data=data)
 		sign = req.json().get('signature')
 		user_url_prefix = 'https://www.iesdouyin.com/web/api/v2/aweme/like' if type_flag == 'f' else 'https://www.iesdouyin.com/web/api/v2/aweme/post'
-		print('解析视频链接中')
+		print('解析視頻鏈接中')
 		while has_more != 0:
 			user_url = user_url_prefix + '/?user_id=%s&sec_uid=&count=21&max_cursor=%s&aid=1128&_signature=%s&dytk=%s' % (user_id, max_cursor, sign, dytk)
 			req = requests.get(user_url, headers=self.headers)
@@ -75,7 +75,7 @@ class DouYin(object):
 						nickname = nickname.replace(c, '').strip().strip('\.')
 						share_desc = share_desc.replace(c, '').strip()
 				share_id = each['aweme_id']
-				if share_desc in ['抖音-原创音乐短视频社区', 'TikTok', '']:
+				if share_desc in ['抖音-原創音樂短視頻社區', 'TikTok', '']:
 					video_names.append(share_id + '.mp4')
 				else:
 					video_names.append(share_id + '-' + share_desc + '.mp4')
@@ -89,16 +89,16 @@ class DouYin(object):
 
 	def get_download_url(self, video_url, watermark_flag):
 		"""
-		获得带水印的视频播放地址
+		獲得帶水印的視頻播放地址
 		Parameters:
-			video_url：带水印的视频播放地址
+			video_url：帶水印的視頻播放地址
 		Returns:
-			download_url: 带水印的视频下载地址
+			download_url: 帶水印的視頻下載地址
 		"""
-		# 带水印视频
+		# 帶水印視頻
 		if watermark_flag == True:
 			download_url = video_url.replace('/play/', '/playwm/')
-		# 无水印视频
+		# 無水印視頻
 		else:
 			download_url = video_url.replace('/playwm/', '/play/')
 
@@ -106,13 +106,13 @@ class DouYin(object):
 
 	def video_downloader(self, video_url, video_name, watermark_flag=False):
 		"""
-		视频下载
+		視頻下載
 		Parameters:
-			video_url: 带水印的视频地址
-			video_name: 视频名
-			watermark_flag: 是否下载带水印的视频
+			video_url: 帶水印的視頻地址
+			video_name: 視頻名
+			watermark_flag: 是否下載帶水印的視頻
 		Returns:
-			无
+			無
 		"""
 		size = 0
 		video_url = self.get_download_url(video_url, watermark_flag=watermark_flag)
@@ -128,27 +128,27 @@ class DouYin(object):
 						size += len(data)
 						file.flush()
 
-						sys.stdout.write('  [下载进度]:%.2f%%' % float(size / content_size * 100) + '\r')
+						sys.stdout.write('  [下載進度]:%.2f%%' % float(size / content_size * 100) + '\r')
 						sys.stdout.flush()
 
 	def run(self):
 		"""
-		运行函数
+		運行函數
 		Parameters:
 			None
 		Returns:
 			None
 		"""
 		self.hello()
-		print('UID取得方式：\n分享用户页面，用浏览器打开短链接，原始链接中/share/user/后的数字即是UID')
-		user_id = input('请输入UID (例如60388937600):')
+		print('UID取得方式：\n分享用戶頁面，用瀏覽器打開短鏈接，原始鏈接中/share/user/後的數字即是UID')
+		user_id = input('請輸入UID (例如60388937600):')
 		user_id = user_id if user_id else '60388937600'
-		watermark_flag = input('是否下载带水印的视频 (0-否(默认), 1-是):')
+		watermark_flag = input('是否下載帶水印的視頻 (0-否(默認), 1-是):')
 		watermark_flag = watermark_flag if watermark_flag!='' else '0'
 		watermark_flag = bool(int(watermark_flag))
-		type_flag = input('f-收藏的(默认), p-上传的:')
+		type_flag = input('f-收藏的(默認), p-上傳的:')
 		type_flag = type_flag if type_flag!='' else 'f'
-		save_dir = input('保存路径 (例如"E:/Download/", 默认"./Download/"):')
+		save_dir = input('保存路徑 (例如"E:/Download/", 默認"./Download/"):')
 		save_dir = save_dir if save_dir else "./Download/"
 		video_names, video_urls, share_urls, nickname = self.get_video_urls(user_id, type_flag)
 		nickname_dir = os.path.join(save_dir, nickname)
@@ -159,9 +159,9 @@ class DouYin(object):
 		if type_flag == 'f':
 			if 'favorite' not in os.listdir(nickname_dir):
 				os.mkdir(os.path.join(nickname_dir, 'favorite'))
-		print('视频下载中:共有%d个作品!\n' % len(video_urls))
+		print('視頻下載中:共有%d個作品!\n' % len(video_urls))
 		for num in range(len(video_urls)):
-			print('  解析第%d个视频链接 [%s] 中，请稍后!\n' % (num + 1, share_urls[num]))
+			print('  解析第%d個視頻鏈接 [%s] 中，請稍後!\n' % (num + 1, share_urls[num]))
 			if '\\' in video_names[num]:
 				video_name = video_names[num].replace('\\', '')
 			elif '/' in video_names[num]:
@@ -170,22 +170,22 @@ class DouYin(object):
 				video_name = video_names[num]
 			video_path = os.path.join(nickname_dir, video_name) if type_flag!='f' else os.path.join(nickname_dir, 'favorite', video_name)
 			if os.path.isfile(video_path):
-				print('视频已存在')
+				print('視頻已存在')
 			else:
 				self.video_downloader(video_urls[num], video_path, watermark_flag)
 			print('\n')
-		print('下载完成!')
+		print('下載完成!')
 
 	def hello(self):
 		"""
-		打印欢迎界面
+		打印歡迎界面
 		Parameters:
 			None
 		Returns:
 			None
 		"""
 		print('*' * 100)
-		print('\t\t\t\t抖音App视频下载小助手')
+		print('\t\t\t\t抖音App視頻下載小助手')
 		print('\t\t作者:Jack Cui、steven7851')
 		print('*' * 100)
 

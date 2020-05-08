@@ -8,22 +8,22 @@ from bs4 import BeautifulSoup
 class DouYin(object):
 	def __init__(self, width = 500, height = 300):
 		"""
-		抖音App视频下载
+		抖音App視頻下載
 		"""
-		# 无头浏览器
+		# 無頭瀏覽器
 		chrome_options = Options()
 		chrome_options.add_argument('user-agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"')
 		self.driver = Browser(driver_name='chrome', executable_path='D:/chromedriver', options=chrome_options, headless=True)
 
 	def get_video_urls(self, user_id):
 		"""
-		获得视频播放地址
+		獲得視頻播放地址
 		Parameters:
-			user_id：查询的用户ID
+			user_id：查詢的用戶ID
 		Returns:
-			video_names: 视频名字列表
-			video_urls: 视频链接列表
-			nickname: 用户昵称
+			video_names: 視頻名字列表
+			video_urls: 視頻鏈接列表
+			nickname: 用戶暱稱
 		"""
 		video_names = []
 		video_urls = []
@@ -42,7 +42,7 @@ class DouYin(object):
 		i = 1
 		for each in html['aweme_list']:
 			share_desc = each['share_info']['share_desc']
-			if '抖音-原创音乐短视频社区' == share_desc:
+			if '抖音-原創音樂短視頻社區' == share_desc:
 				video_names.append(str(i) + '.mp4')
 				i += 1
 			else:
@@ -53,11 +53,11 @@ class DouYin(object):
 
 	def get_download_url(self, video_url):
 		"""
-		获得带水印的视频播放地址
+		獲得帶水印的視頻播放地址
 		Parameters:
-			video_url：带水印的视频播放地址
+			video_url：帶水印的視頻播放地址
 		Returns:
-			download_url: 带水印的视频下载地址
+			download_url: 帶水印的視頻下載地址
 		"""
 		req = requests.get(url = video_url, verify = False)
 		bf = BeautifulSoup(req.text, 'lxml')
@@ -69,13 +69,13 @@ class DouYin(object):
 
 	def video_downloader(self, video_url, video_name, watermark_flag=True):
 		"""
-		视频下载
+		視頻下載
 		Parameters:
-			video_url: 带水印的视频地址
-			video_name: 视频名
-			watermark_flag: 是否下载不带水印的视频
+			video_url: 帶水印的視頻地址
+			video_name: 視頻名
+			watermark_flag: 是否下載不帶水印的視頻
 		Returns:
-			无
+			無
 		"""
 		size = 0
 		if watermark_flag == True:
@@ -94,17 +94,17 @@ class DouYin(object):
 						size += len(data)
 						file.flush()
 
-						sys.stdout.write('  [下载进度]:%.2f%%' % float(size / content_size * 100) + '\r')
+						sys.stdout.write('  [下載進度]:%.2f%%' % float(size / content_size * 100) + '\r')
 						sys.stdout.flush()
 
 
 	def remove_watermark(self, video_url):
 		"""
-		获得无水印的视频播放地址
+		獲得無水印的視頻播放地址
 		Parameters:
-			video_url: 带水印的视频地址
+			video_url: 帶水印的視頻地址
 		Returns:
-			无水印的视频下载地址
+			無水印的視頻下載地址
 		"""
 		self.driver.visit('http://douyin.iiilab.com/')
 		self.driver.find_by_tag('input').fill(video_url)
@@ -115,20 +115,20 @@ class DouYin(object):
 
 	def run(self):
 		"""
-		运行函数
+		運行函數
 		Parameters:
 			None
 		Returns:
 			None
 		"""
 		self.hello()
-		user_id = input('请输入ID(例如40103580):')
+		user_id = input('請輸入ID(例如40103580):')
 		video_names, video_urls, nickname = self.get_video_urls(user_id)
 		if nickname not in os.listdir():
 			os.mkdir(nickname)
-		print('视频下载中:共有%d个作品!\n' % len(video_urls))
+		print('視頻下載中:共有%d個作品!\n' % len(video_urls))
 		for num in range(len(video_urls)):
-			print('  解析第%d个视频链接 [%s] 中，请稍后!\n' % (num+1, video_urls[num]))
+			print('  解析第%d個視頻鏈接 [%s] 中，請稍後!\n' % (num+1, video_urls[num]))
 			if '\\' in video_names[num]:
 				video_name = video_names[num].replace('\\', '')
 			elif '/' in video_names[num]:
@@ -138,18 +138,18 @@ class DouYin(object):
 			self.video_downloader(video_urls[num], os.path.join(nickname, video_name))
 			print('\n')
 
-		print('下载完成!')
+		print('下載完成!')
 
 	def hello(self):
 		"""
-		打印欢迎界面
+		打印歡迎界面
 		Parameters:
 			None
 		Returns:
 			None
 		"""
 		print('*' * 100)
-		print('\t\t\t\t抖音App视频下载小助手')
+		print('\t\t\t\t抖音App視頻下載小助手')
 		print('\t\t作者:Jack Cui')
 		print('*' * 100)
 

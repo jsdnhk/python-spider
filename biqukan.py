@@ -9,13 +9,13 @@ import sys
 import types
 
 """
-类说明:下载《笔趣看》网小说: url:https://www.biqukan.com/
+類說明:下載《筆趣看》網小說: url:https://www.biqukan.com/
 
 Parameters:
-	target - 《笔趣看》网指定的小说目录地址(string)
+	target - 《筆趣看》網指定的小說目錄地址(string)
 
 Returns:
-	无
+	無
 
 Modify:
 	2017-05-06
@@ -26,15 +26,15 @@ class download(object):
 		self.__head = {'User-Agent':'Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19',}
 
 	"""
-	函数说明:获取下载链接
+	函數說明:獲取下載鏈接
 
 	Parameters:
-		无
+		無
 
 	Returns:
-		novel_name + '.txt' - 保存的小说名(string)
-		numbers - 章节数(int)
-		download_dict - 保存章节名称和下载链接的字典(dict)
+		novel_name + '.txt' - 保存的小說名(string)
+		numbers - 章節數(int)
+		download_dict - 保存章節名稱和下載鏈接的字典(dict)
 
 	Modify:
 		2017-05-06
@@ -68,13 +68,13 @@ class download(object):
 		return novel_name + '.txt', numbers, download_dict
 	
 	"""
-	函数说明:爬取文章内容
+	函數說明:爬取文章內容
 
 	Parameters:
-		url - 下载连接(string)
+		url - 下載連接(string)
 
 	Returns:
-		soup_text - 章节内容(string)
+		soup_text - 章節內容(string)
 
 	Modify:
 		2017-05-06
@@ -89,15 +89,15 @@ class download(object):
 		return soup_text
 
 	"""
-	函数说明:将爬取的文章内容写入文件
+	函數說明:將爬取的文章內容寫入文件
 
 	Parameters:
-		name - 章节名称(string)
-		path - 当前路径下,小说保存名称(string)
-		text - 章节内容(string)
+		name - 章節名稱(string)
+		path - 當前路徑下,小說保存名稱(string)
+		text - 章節內容(string)
 
 	Returns:
-		无
+		無
 
 	Modify:
 		2017-05-06
@@ -116,27 +116,27 @@ class download(object):
 			f.write('\n\n')
 
 if __name__ == "__main__":
-	print("\n\t\t欢迎使用《笔趣看》小说下载小工具\n\n\t\t作者:Jack-Cui\t时间:2017-05-06\n")
+	print("\n\t\t歡迎使用《筆趣看》小說下載小工具\n\n\t\t作者:Jack-Cui\t時間:2017-05-06\n")
 	print("*************************************************************************")
 	
-	#小说地址
-	target_url = str(input("请输入小说目录下载地址:\n"))
+	#小說地址
+	target_url = str(input("請輸入小說目錄下載地址:\n"))
 
-	#实例化下载类
+	#實例化下載類
 	d = download(target = target_url)
 	name, numbers, url_dict = d.get_download_url()
 	if name in os.listdir():
 		os.remove(name)
 	index = 1
 
-	#下载中
-	print("《%s》下载中:" % name[:-4])
+	#下載中
+	print("《%s》下載中:" % name[:-4])
 	for key, value in url_dict.items():
 		d.Writer(key, name, d.Downloader(value))
-		sys.stdout.write("已下载:%.3f%%" %  float(index/numbers) + '\r')
+		sys.stdout.write("已下載:%.3f%%" %  float(index/numbers) + '\r')
 		sys.stdout.flush()
 		index += 1	
 
-	print("《%s》下载完成！" % name[:-4])
+	print("《%s》下載完成！" % name[:-4])
 
 	
